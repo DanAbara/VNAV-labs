@@ -1,26 +1,129 @@
+#include <cstdlib>
+#include <Eigen/Dense>
 #include "random_vector.h"
-// TODO: add any include you might require
 
 RandomVector::RandomVector(int size, double max_val) { 
-  // TODO: Write your code here
+  std::vector<double> newVec(size, max_val);
+  vect = newVec;
+
+  for (auto i = 0; i != vect.size(); i++) {
+    vect.at(i) = (double) rand() / RAND_MAX;
+  }
 }
 
 void RandomVector::print(){
-  // TODO: Write your code here
+  for (auto i = 0; i != vect.size(); i++) {
+    std::cout << vect.at(i) << " ";
+  }
+  std::cout << std::endl;
+
 }
 
 double RandomVector::mean(){
-  // TODO: Write your code here
+  double sum = vect.at(0);
+
+  for (auto i = 1; i != vect.size(); i++) {
+    sum += vect.at(i);
+  }
+
+  double avg = sum / vect.size();
+  return avg;
 }
 
 double RandomVector::max(){
-  // TODO: Write your code here
+  double max = vect.at(0);
+
+  for (auto i = 1; i != vect.size(); i++) {
+    if (max < vect.at(i)) {
+      max = vect.at(i);
+    }
+  }
+
+  return max;
 }
 
 double RandomVector::min(){
-  //TODO:  Write your code here
+  double min = vect.at(0);
+
+  for (auto i = 1; i < vect.size(); i++) {
+    if (min > vect.at(i)) {
+      min = vect.at(i);
+    }
+  }
+  return min;
 }
 
 void RandomVector::printHistogram(int bins){
-  // TODO: Write your code here
+  // define width of each bin
+  double width = RandomVector::max() / bins;
+
+  // vector to hold width sizes from vect.min as lower bound
+  std::vector<double> bin_widths;
+  for (auto i = 0; i < bins; i++) {
+    double bin_width = RandomVector::min() + (width * (i + 1));
+    bin_widths.push_back(bin_width);
+  }
+
+  // ensure the upper bound of the last bin is not greater than vect.max()
+  if (bin_widths[bins - 1] > RandomVector::max()) {
+    bin_widths[bins - 1] = RandomVector::max();
+  }
+
+  // initialize vector to count number of items in bins
+  std::vector<int> counts;
+  for (auto i = 0; i < bins; i++) {
+    counts.push_back(0);
+  }
+
+  // val is in bin1: interval min to bin_width[0]
+  for (auto &item : vect) {
+    if (item < bin_widths[0])
+    {
+      counts[0] ++;
+    }
+  }
+
+  // val is in bins 2 to 2nd to last bin: interval bin_width[0] to bin_width[bin - 2]
+  int k = 1;
+  while (k <= bins - 2) 
+  {
+    for (auto &item : vect) 
+    {
+      if (item >= bin_widths[k-1] && item < bin_widths[k])
+      {
+        counts[k] ++;
+      }
+    }
+    k++;
+  }
+
+  // val is in lastbin: interval bin_widths[bins-2] to bin_widths[bins-1]
+  for (auto &item : vect) 
+  {
+    if (item >= bin_widths[bins - 2] && item <= bin_widths[bins - 1])
+    {
+      counts[bins - 1] ++;
+    }
+  }
+
+  // find max height of histogram from counts
+  int max_height = counts[0];
+  for (auto i = 1; i < bins; i++)
+  {
+    if (counts.at(i) > max_height)
+    {
+      max_height = counts.at(i);
+    }
+  }
+
+  // Plot the histogram max_height (row) x bins (column)
+  Eigen::MatrixXd hist(max_height, max_height);
+  // for (auto i = 0; i < max_height; i++) 
+  // {
+  //   for (auto j = 0; j < bins; j++) 
+  //   {
+  //     hist[i][j] = 
+  //   }
+  // }
+
 }

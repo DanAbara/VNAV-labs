@@ -14,5 +14,5 @@ int main(){
 
   std::cout << "Histogram:" << std::endl;
   rv.printHistogram(5);
-  std::cout << std::endl;
+  // std::cout << std::endl;
 }
