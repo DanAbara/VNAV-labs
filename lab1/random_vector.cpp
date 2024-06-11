@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <Eigen/Dense>
 #include "random_vector.h"
 
 RandomVector::RandomVector(int size, double max_val) { 
@@ -65,8 +64,8 @@ void RandomVector::printHistogram(int bins){
   }
 
   // ensure the upper bound of the last bin is not greater than vect.max()
-  if (bin_widths[bins - 1] > RandomVector::max()) {
-    bin_widths[bins - 1] = RandomVector::max();
+  if (bin_widths.at(bins - 1) > RandomVector::max()) {
+    bin_widths.at(bins - 1) = RandomVector::max();
   }
 
   // initialize vector to count number of items in bins
@@ -77,9 +76,9 @@ void RandomVector::printHistogram(int bins){
 
   // val is in bin1: interval min to bin_width[0]
   for (auto &item : vect) {
-    if (item < bin_widths[0])
+    if (item < bin_widths.at(0))
     {
-      counts[0] ++;
+      counts.at(0) ++;
     }
   }
 
@@ -89,9 +88,9 @@ void RandomVector::printHistogram(int bins){
   {
     for (auto &item : vect) 
     {
-      if (item >= bin_widths[k-1] && item < bin_widths[k])
+      if (item >= bin_widths.at(k - 1) && item < bin_widths.at(k))
       {
-        counts[k] ++;
+        counts.at(k) ++;
       }
     }
     k++;
@@ -100,9 +99,9 @@ void RandomVector::printHistogram(int bins){
   // val is in lastbin: interval bin_widths[bins-2] to bin_widths[bins-1]
   for (auto &item : vect) 
   {
-    if (item >= bin_widths[bins - 2] && item <= bin_widths[bins - 1])
+    if (item >= bin_widths.at(bins - 2) && item <= bin_widths.at(bins - 1))
     {
-      counts[bins - 1] ++;
+      counts.at(bins - 1) ++;
     }
   }
 
@@ -117,13 +116,17 @@ void RandomVector::printHistogram(int bins){
   }
 
   // Plot the histogram max_height (row) x bins (column)
-  Eigen::MatrixXd hist(max_height, max_height);
-  // for (auto i = 0; i < max_height; i++) 
-  // {
-  //   for (auto j = 0; j < bins; j++) 
-  //   {
-  //     hist[i][j] = 
-  //   }
-  // }
+  for (auto i = max_height; i >= 1; i--)
+  {
+    for (auto j = 0; j < counts.size(); j++)
+    {
+      if (i <= counts.at(j)) {
+        std::cout << "*** ";
+      } else {
+        std::cout << "    ";
+      }
+    }
+    std::cout << std::endl;
+  }
 
 }
