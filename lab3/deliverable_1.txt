@@ -1,0 +1,28 @@
+A
+1. Conversions
+tf2::convert(quat_msg, quat_tf) //convert from msg to tf
+ 
+2. Conversions
+quat_msg = tf2::toMsg(quat_tf) // convert from tf to msg
+ 
+3. Scalar of quaternion
+tf2::Quaternion my_quat;
+// Ans:
+my_quat.getW(); //get scalar component
+
+B
+1. Extracting yaw from quaternion
+tf2::Quaternion quat_t;
+// Ans:
+quat_t.getZ();
+
+2. Converting from geomertry_msgs::Quaternion to Eigen 3x3 matrix
+geomertry_msgs::Quaternion quat_msg; // define geometry_msgs quaternion
+Eigen::Quaterniond quat_eig; // define eigen quaternion
+// Ans:
+tf2::fromMsg(quat_msg, quat_eig) // convert from msg to eigen-specific quaternion
+Eigen::Matrix3d mat_q; // define 3x3 matrix 
+mat_q = quat_eig.toRotationMatrix(); // convert the quaternion to a 3x3 rotation matrix
+
+
+
